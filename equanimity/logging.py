@@ -49,8 +49,7 @@ def sync_logs():
     if not os.path.exists(media_log_dir):
         os.makedirs(media_log_dir)
 
-    rsync_cmd = 'rsync -r --progress --inplace --no-whole-file ' + \
-        '--delete %s/ %s' % (config.LOG_DIR, media_log_dir)
+    rsync_cmd = 'rsync -a --delete %s/ %s' % (config.LOG_DIR, media_log_dir)
     subprocess.call(rsync_cmd, shell=True)
 
     if checksum_directory(config.LOG_DIR) == checksum_directory(media_log_dir):

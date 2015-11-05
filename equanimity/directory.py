@@ -25,8 +25,7 @@ class Directory(object):
         """
         Sync an ordinary directory (not a VM or a git-annex repo) using rsync.
         """
-        cmd = 'rsync -r --progress --inplace --no-whole-file --delete ' + \
-            '%s/ %s' % (self.source, self.target)
+        cmd = 'rsync -a --progress --delete %s/ %s' % (self.source, self.target)
 
         subprocess.call(cmd, shell=True)
 
