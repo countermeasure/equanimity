@@ -16,7 +16,10 @@ class Directory(object):
         self.source = instance['path']
         self.type = instance['type']
 
-        self.target = os.path.join(config.DEVICE['path'], self.name)
+        self.target = os.path.join(
+            config.DEVICE['path'],
+            os.path.basename(self.source)
+        )
 
     def sync_ordinary_directory(self):
         """
