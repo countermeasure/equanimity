@@ -15,15 +15,17 @@ def checksum_directory(directory):
     sha256 = hashlib.sha256()
 
     chunk_size = 128 * sha256.block_size
+
     directory_size = get_directory_size(directory)
     progress = 0
     progress_percentage = None
 
     print 'Calculating checksum for: %s' % directory
 
+
     for root, dirs, files in os.walk(directory):
         dirs.sort()
-        # Add directory name ot the checksum.
+        # Add directory names to the checksum.
         sha256.update(str(dirs))
 
         for file_name in sorted(files):
@@ -31,32 +33,35 @@ def checksum_directory(directory):
             sha256.update(file_name)
             file_path = os.path.join(root, file_name)
 
-            with open(file_path, 'r') as f:
-                while True:
-                    buffer = f.read(chunk_size)
-                    if not buffer:
-                        break
+            if not os.path.islink(file_path):
+                with open(file_path, 'r') as f:
+                    while True:
+                        buffer = f.read(chunk_size)
+                        if not buffer:
+                            break
 
-                    sha256.update(buffer)
-                    progress += chunk_size
+                        sha256.update(buffer)
+                        progress += chunk_size
 
-                    # Only update the display when the progress percentage
-                    # changes, otherwise the display can't keep up with all
-                    # the updates and it lags the actual state of the script.
-                    new_progress_percentage = '{:.0%}'.format(
-                        float(progress)/float(directory_size)
-                    )
-                    if progress_percentage != new_progress_percentage:
-                        progress_percentage = new_progress_percentage
-                        sys.stdout.write(
-                            '\rChecksum progress: {} of {}Mb'.format(
-                                progress_percentage,
-                                '{:,}'.format(directory_size / 1000000)
-                            )
+                        # Only update the display when the progress percentage
+                        # changes, otherwise the display can't keep up with all
+                        # the updates and it lags the actual state of the
+                        # script.
+                        new_progress_percentage = '{:.0%}'.format(
+                            float(progress)/float(directory_size)
                         )
-                        sys.stdout.flush()
+                        if progress_percentage != new_progress_percentage:
+                            progress_percentage = new_progress_percentage
+                            sys.stdout.write(
+                                '\rChecksum progress: {} of {}Mb'.format(
+                                    progress_percentage,
+                                    '{:,}'.format(directory_size / 1000000)
+                                )
+                            )
+                            sys.stdout.flush()
 
     sys.stdout.flush()
+    print ''
 
     return sha256.hexdigest()
 
