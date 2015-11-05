@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import argparse
+import sys
+
 import config
 from device import Device
 from directory import Directory
@@ -56,8 +59,24 @@ def backup_directories(directories_to_backup):
     log('')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-s',
+        '--summary',
+        help='show the devices summary',
+        action='store_true'
+    )
+    args = parser.parse_args()
+
+    # If the `-s/--summary` option is passed when the program is invoked,
+    # display the devices comparison then quit.
+    if args.summary:
+        print_devices_comparison()
+        sys.exit()
+
+    # If a device is present, perform a backup.
     if config.DEVICE:
         device = Device(config.DEVICE)
 
