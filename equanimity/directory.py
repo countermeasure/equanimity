@@ -90,6 +90,11 @@ class Directory(object):
         """
         Backs up the directory.
         """
+        # If the target directory doesn't exist, create it.
+        if not os.path.exists(self.target):
+            os.makedirs(self.target)
+
+        # Sync source and target directories.
         if self.type == 'directory':
             self.sync_ordinary_directory()
         elif self.type == 'virtual-machine':
