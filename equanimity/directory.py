@@ -23,7 +23,7 @@ class Directory(object):
 
     def sync_ordinary_directory(self):
         """
-        Sync an ordinary directory (not a VM or a git-annex repo) using rsync.
+        Sync an ordinary directory (not a VM) using rsync.
         """
         cmd = 'rsync -a --progress --delete %s/ %s' % (self.source, self.target)
 
@@ -71,20 +71,6 @@ class Directory(object):
             log('    %s:' % self.name)
             log('      copied: False')
 
-    def sync_git_annex(self):
-        """
-        Sync a git-annex repository using git-annex.
-        """
-        subprocess.call(
-            'cd %s && git annex sync laptop --content' % self.target,
-            shell=True
-        )
-
-        log('    %s:' % self.name)
-        log('      copied: True')
-
-        self.verify_backup()
-
     def backup(self):
         """
         Backs up the directory.
@@ -98,8 +84,6 @@ class Directory(object):
             self.sync_ordinary_directory()
         elif self.type == 'virtual-machine':
             self.sync_virtual_machine()
-        elif self.type == 'git-annex':
-            self.sync_git_annex()
 
     def verify_backup(self):
         """
@@ -107,7 +91,10 @@ class Directory(object):
         succeeded.
         """
         source_checksum = checksum_directory(self.source)
+        print source_checksum
+
         target_checksum = checksum_directory(self.target)
+        print target_checksum
 
         if source_checksum == target_checksum:
             log('      verified: True')
