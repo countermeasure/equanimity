@@ -25,7 +25,10 @@ class Directory(object):
         """
         Sync an ordinary directory (not a VM) using rsync.
         """
-        cmd = 'rsync -a --progress --delete %s/ %s' % (self.source, self.target)
+        cmd = 'rsync -a --info=progress2 --no-inc-recursive --delete %s/ %s' % (
+            self.source,
+            self.target
+        )
 
         subprocess.call(cmd, shell=True)
 
