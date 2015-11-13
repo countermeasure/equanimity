@@ -95,7 +95,7 @@ def print_devices_comparison(with_color=True, with_locations=False):
         for d in config.DEVICES:
             device = Device(d)
             location_row += '|{:^{width}}'.format(
-                '(%s)' % device.location,
+                '%s' % device.location,
                 width=(column_width - 1)
             )
         location_row += '|'

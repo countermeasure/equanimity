@@ -1,10 +1,13 @@
 import os
+import subprocess
 
 from datetime import datetime
 
 import config
 
+from output import print_header
 from utils import (
+    checksum_directory,
     get_directory_size,
     load_yaml,
     print_in_color,
@@ -189,3 +192,24 @@ class Device(object):
                     self.directory_queue.append(directory['name'])
 
         return self.directory_queue
+
+    def sync_logs_and_config(self):
+        """
+        Copies all logs and config files to the device and verifies that the
+        copy was successful.
+        """
+        source_dir = config.BASE_PATH
+        target_dir = os.path.join(self.path, '.equanimity')
+
+        print_header('Syncing logs to backup device')
+
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
+
+        rsync_cmd = 'rsync -a --delete %s/ %s' % (source_dir, target_dir)
+        subprocess.call(rsync_cmd, shell=True)
+
+        if checksum_directory(source_dir) == checksum_directory(target_dir):
+            print 'Logs synced successfully.'
+        else:
+            print_in_color('Logs NOT SYNCED.', 'red')

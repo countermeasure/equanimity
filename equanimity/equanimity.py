@@ -8,7 +8,6 @@ from device import Device
 from directory import Directory
 from logging import (
     log,
-    sync_logs,
     write_log_headers,
 )
 from output import (
@@ -94,7 +93,7 @@ if __name__ == '__main__':
 
         backup_directories(device.directory_queue)
 
-        sync_logs()
+        device.sync_logs_and_config()
 
         print_devices_comparison(with_locations=True)
 
