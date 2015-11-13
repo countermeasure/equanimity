@@ -7,7 +7,7 @@ from utils import (
 )
 
 
-def print_devices_comparison(with_color=True):
+def print_devices_comparison(with_color=True, with_locations=False):
     """
     Prints a table showing when each directory was last backed up on each
     device.
@@ -25,7 +25,7 @@ def print_devices_comparison(with_color=True):
     print '+{:-<{width}}+'.format('', width=(table_width - 2))
     print '|{:^{width}}|'.format('<<< All devices >>>', width=(table_width - 2))
 
-    # Print the column headings rows.
+    # Print the subheading row.
     print '+{:-<{width1}}+{:-<{width2}}+'.format(
         '',
         '',
@@ -39,6 +39,8 @@ def print_devices_comparison(with_color=True):
         width2=((column_width * (no_columns - 1)) - 1)
     )
     print horizontal_border
+
+    # Print the column headings row.
     column_heading_row = '|{:^{width}}' .format('', width=(column_width - 1))
     for device in config.DEVICES:
         column_heading_row += '|{:^{width}}'.format(
@@ -82,4 +84,23 @@ def print_devices_comparison(with_color=True):
         print directory_row
         print horizontal_border
 
+    # Print each device's location.
+    if with_locations:
+        print ''
+        print horizontal_border
+        location_row = '| {:<{width}}'.format(
+            'Location',
+            width=(column_width - 2)
+        )
+        for d in config.DEVICES:
+            device = Device(d)
+            location_row += '|{:^{width}}'.format(
+                '(%s)' % device.location,
+                width=(column_width - 1)
+            )
+        location_row += '|'
+        print location_row
+        print horizontal_border
+
+    # Add two blank lines at the end for visual clarity.
     print'\n'

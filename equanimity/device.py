@@ -15,6 +15,7 @@ from utils import (
 class Device(object):
 
     def __init__(self, instance):
+        self._location = instance['location']
         self.name = instance['name']
         self.path = instance['path']
 
@@ -29,6 +30,13 @@ class Device(object):
             self.exclude = []
 
         self.log_path = os.path.join(config.LOG_DIR, '%s.log' % self.name)
+
+    @property
+    def location(self):
+        """
+        Gets the device's location.
+        """
+        return self._location
 
     def directory_age(self, directory):
         """

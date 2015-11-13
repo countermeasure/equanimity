@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
         sync_logs()
 
-        print_devices_comparison()
+        print_devices_comparison(with_locations=True)
 
     else:
         print_in_color('\nNo backup device was found.\n', 'red')
