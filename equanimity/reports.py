@@ -43,9 +43,10 @@ def print_devices_comparison(with_color=True, with_locations=False):
     # Print the column headings row.
     column_heading_row = '|{:^{width}}' .format('', width=(column_width - 1))
     for device in config.DEVICES:
+        max_text_width = column_width - 1
         column_heading_row += '|{:^{width}}'.format(
-            device['name'],
-            width=(column_width - 1)
+            device['name'][:max_text_width],
+            width=max_text_width
         )
     column_heading_row += '|'
     print column_heading_row
@@ -94,9 +95,10 @@ def print_devices_comparison(with_color=True, with_locations=False):
         )
         for d in config.DEVICES:
             device = Device(d)
+            max_text_width = column_width - 1
             location_row += '|{:^{width}}'.format(
-                '%s' % device.location,
-                width=(column_width - 1)
+                device.location[:max_text_width],
+                width=max_text_width
             )
         location_row += '|'
         print location_row
