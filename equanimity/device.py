@@ -50,7 +50,10 @@ class Device(object):
         # entry, newest first, until one is found which records a copy
         # having been made. If the copy is verified, `dir_date` is its age.
         # If the copy is not verified, `dir_date` is None because it is faulty.
-        device_log = load_yaml(self.log_path)
+        try:
+            device_log = load_yaml(self.log_path)
+        except:
+            return None
         dir_date = None
         for entry in reversed(device_log):
             try:
